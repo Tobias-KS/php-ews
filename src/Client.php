@@ -1811,41 +1811,44 @@ class Oath2Soap extends \SoapClient
         parent::__construct($wsdl, $options);
     }
 
+    
+    
     /**
      * {@inheritdoc}
      */
-    public function __doRequest($request, $location, $action, $version, $one_way = 0)
-    {
-        $headers = $this->buildHeaders($action);
-        $this->__last_request = $request;
-        $this->__last_request_headers = $headers;
-
-        // Only reinitialize curl handle if the location is different.
-        if (!$this->ch
-            || curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) != $location) {
-            $this->ch = curl_init($location);
-        }
-
-        curl_setopt_array($this->ch, $this->curlOptions($action, $request));
-
-        $response = curl_exec($this->ch);
-
-        // TODO: Add some real error handling.
-        // If the response if false than there was an error and we should throw
-        // an exception.
-        if ($response === false) {
-            $this->__last_response = $this->__last_response_headers = false;
-            throw new \RuntimeException(
-                'Curl error: ' . curl_error($this->ch),
-                curl_errno($this->ch)
-            );
-        }
-
-        $this->parseResponse($response);
-        $this->cleanResponse();
-
-        return $this->__last_response;
+public function __doRequest($request, $location, $action, $version, $one_way = 0){
+    $headers = array(
+        'Method: POST',
+        'Connection: Keep-Alive',
+        'User-Agent: PHP-SOAP-CURL',
+        'Content-Type: text/xml; charset=utf-8',
+        'SOAPAction: "'.$action.'"',
+    );
+    // Use Token for Authorization if set
+    if(!empty($this->token)){
+        $headers[] = sprintf("Authorization: Bearer %s", $this->token);
+        curl_setopt($this->ch, CURLOPT_HTTPAUTH, CURLAUTH_BEARER);
+    }else{ // User/Password Login
+        curl_setopt($this->ch, CURLOPT_USERPWD, $this->user.':'.$this->password);
     }
+    
+    $this->ch = curl_init($location);
+
+    curl_setopt($this->ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($this->ch, CURLOPT_SSL_VERIFYHOST, false);
+    curl_setopt($this->ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($this->ch, CURLOPT_HTTPHEADER, $headers);
+    curl_setopt($this->ch, CURLOPT_POST, true );
+    curl_setopt($this->ch, CURLOPT_POSTFIELDS, $request);
+    curl_setopt($this->ch, CURLOPT_HTTP_VERSION, CURL_HTTP_VERSION_1_1);
+
+    curl_setopt($this->ch, CURLOPT_TIMEOUT, 60); //timeout in seconds
+    curl_setopt($this->ch, CURLOPT_CONNECTTIMEOUT, 60);
+
+    $response = curl_exec($this->ch);
+
+    return $response;
+}
 
     /**
      * Returns the response code from the last request
