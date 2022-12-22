@@ -1638,17 +1638,17 @@ future version of PHP)
 			'classmap' => $this->classMap(),
 			'curlopts' => $this->curl_options,
 			'features' => SOAP_SINGLE_ELEMENT_ARRAYS,
-		); 
+		);
 
 		if(!empty($this->token)) {
 
-			$authArray["token"] = $this->token; 
+			$authArray["token"] = $this->token;
 
 		}
 		else {
 
-			$authArray["user"] = $this->username; 
-			$authArray["password"] = $this->password; 
+			$authArray["user"] = $this->username;
+			$authArray["password"] = $this->password;
 
 		}
 
@@ -1764,7 +1764,7 @@ future version of PHP)
 
 
 
-class Oath2Soap extends \SoapClient 
+class Oath2Soap extends \SoapClient
 {
     /**
      * cURL resource used to make the SOAP request
@@ -1819,8 +1819,7 @@ class Oath2Soap extends \SoapClient
         $this->__last_request_headers = $headers;
 
         // Only reinitialize curl handle if the location is different.
-        if (!$this->ch
-            || curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) != $location) {
+        if (!$this->ch || curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) != $location) {
             $this->ch = curl_init($location);
         }
 
@@ -1829,14 +1828,13 @@ class Oath2Soap extends \SoapClient
 
         $response = curl_exec($this->ch);
 
-        
+
         $headers = $this->buildHeaders($action);
         $this->__last_request = $request;
         $this->__last_request_headers = $headers;
 
         // Only reinitialize curl handle if the location is different.
-        if (!$this->ch
-            || curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) != $location) {
+        if (!$this->ch || curl_getinfo($this->ch, CURLINFO_EFFECTIVE_URL) != $location) {
             $this->ch = curl_init($location);
         }
 
@@ -1851,17 +1849,7 @@ class Oath2Soap extends \SoapClient
         $this->cleanResponse();
 
         return $this->__last_response;
-    }
-
-
-                curl_errno($this->ch)
-            );
-        }
-
-        $this->parseResponse($response);
-        $this->cleanResponse();
-
-        return $this->__last_response;
+        
     }
 
 
@@ -1902,7 +1890,7 @@ class Oath2Soap extends \SoapClient
 
 		if(!is_null($this->options['token'])) $headers[] = sprintf("Authorization: Bearer %s", $this->options['token']);
 
-		return $headers; 
+		return $headers;
     }
 
     /**
@@ -1948,19 +1936,19 @@ class Oath2Soap extends \SoapClient
      */
     protected function curlOptions($action, $request)
     {
-        $options = 
-			$this->options['curlopts'] + 
+        $options =
+			$this->options['curlopts'] +
 			array(
 				CURLOPT_SSL_VERIFYPEER => true,
 				CURLOPT_RETURNTRANSFER => true,
 				CURLOPT_HTTPHEADER => $this->buildHeaders($action),
 				CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
 				CURLOPT_HTTPAUTH => ((!empty($this->options['token'])) ? CURLAUTH_BASIC : CURLAUTH_BASIC | CURLAUTH_NTLM)
-			); 
+			);
 
 		if(!empty($this->options['user']) && !empty($this->options['password'])) {
 
-			$options[CURLOPT_USERPWD] = $this->options['user'] . ':' . $this->options['password']; 
+			$options[CURLOPT_USERPWD] = $this->options['user'] . ':' . $this->options['password'];
 
 		}
 
