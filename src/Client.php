@@ -1849,7 +1849,7 @@ class Oath2Soap extends \SoapClient
         $this->cleanResponse();
 
         return $this->__last_response;
-        
+
     }
 
 
