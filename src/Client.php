@@ -1814,7 +1814,7 @@ class Oath2Soap extends \SoapClient
     /**
      * {@inheritdoc}
      */
-    public function __doRequest($request, $location, $action, $version, $one_way = 0): ?string
+    public function __doRequest($request, $location, $action, $version, $one_way = 0)
     {
         $headers = $this->buildHeaders($action);
         $this->__last_request = $request;
