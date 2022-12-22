@@ -487,7 +487,7 @@ class Client
     }
 
     /**
-     * Creates a folder hierarchy.
+     * Creates a folder hierarchy..
      *
      * @since Exchange 2013
      *
@@ -1829,14 +1829,7 @@ class Oath2Soap extends \SoapClient
 
         $response = curl_exec($this->ch);
 
-        // TODO: Add some real error handling.
-        // If the response if false than there was an error and we should throw
-        // an exception.
-        if ($response === false) {
-            $this->__last_response = $this->__last_response_headers = false;
-            throw new \RuntimeException(
-                'Curl error: ' . curl_error($this->ch),public function __doRequest($request, $location, $action, $version, $one_way = 0)
-    {
+        
         $headers = $this->buildHeaders($action);
         $this->__last_request = $request;
         $this->__last_request_headers = $headers;
